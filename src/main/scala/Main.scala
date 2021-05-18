@@ -1,28 +1,24 @@
 package dev.habla.twitter.v2
 
 import scala.concurrent.ExecutionContext
-
 import akka.actor.typed.ActorSystem
 import akka.actor.typed.scaladsl.Behaviors
-import caseapp._
 import dev.habla.twitter.v2.recents._
 import scala.util.Success
 import scala.util.Failure
 import scala.concurrent.Future
 
 
-object Main extends CommandApp[Command]{
+object Main extends App{
 
-   def run(command: Command, rargs: RemainingArgs): Unit =
-      command match {
-         case cmd: SearchRecent => runSearchRecent(cmd)
-      }
-
-   def runSearchRecent(search: SearchRecent): Unit = withExecutionContext{ 
+   // TODO: replace caseapp
+   runSearchRecent(Command.SearchRecent(query="scala3", bearer_token="A"))
+   
+   def runSearchRecent(search: Command.SearchRecent): Unit = withExecutionContext{ 
       implicit system => implicit ec => search.toSearchRecentCommand match {
-         case Right(singleRequest: SingleRequest) => 
+         case Right(singleRequest: Request.SingleRequest) => 
             recents.single.Run(singleRequest)
-         case Right(pagination: Pagination) => 
+         case Right(pagination: Request.Pagination) => 
             recents.pagination.Run(pagination)
          case Left(error) => 
             Future.failed(new Exception(error))

@@ -41,13 +41,13 @@ import akka.stream.scaladsl.FlowOpsMat
 
 object Run{
 
-  def apply(cmd: Pagination)(implicit system: ActorSystem[_], ec: ExecutionContext): Future[PaginatedResponse] = 
+  def apply(cmd: Request.Pagination)(implicit system: ActorSystem[_], ec: ExecutionContext): Future[PaginatedResponse] = 
     single.Stream(cmd.request)
       .take(cmd.max, cmd.request.max_results)
       .updateResult
       .logPipeline
       .throttlePipeline
-      .collect{ case tweets: Tweets => tweets }
+      .collect{ case SingleResponse.Ok(tweets) => tweets }
       .alsoTo(storeTweetIncludes(cmd.file_name))
       .toMat(storeTweetData(cmd.file_name))(Keep.left)
       .run
@@ -64,10 +64,10 @@ object Run{
         (rateReset*1000L - System.currentTimeMillis() + 3000L).milliseconds
 
       def unapply(response: SingleResponse): Option[FiniteDuration] = response match {
-        case tweets: Tweets => 
+        case SingleResponse.Ok(tweets) => 
           if (tweets.rateRemaining > 0) None
           else Some(waitingTime(tweets.rateReset))
-        case RateLimitExceeded(rateReset) => 
+        case SingleResponse.RateLimitExceeded(rateReset) => 
           Some(waitingTime(rateReset))
         case _ => 
           None
@@ -84,13 +84,13 @@ object Run{
 
     def updateResult: Source[SingleResponse, Future[PaginatedResponse]] = 
       source.alsoToMat(Sink.fold((None: Option[Tweets.Meta], None: Option[ErroneousSingleResponse])){
-        case ((None, _), tweets: Tweets) => 
+        case ((None, _), SingleResponse.Ok(tweets)) => 
           (Some(tweets.body.meta), None)
-        case (state, RateLimitExceeded(delay)) => 
+        case (state, SingleResponse.RateLimitExceeded(delay)) => 
           state
-        case ((Some(Tweets.Meta(ini, _, count, _)),error), tweets@Tweets(Tweets.Body(_, _, meta@Tweets.Meta(_, last, count2, nextToken)), remaining, reset)) => 
+        case ((Some(Tweets.Meta(ini, _, count, _)),error), SingleResponse.Ok(tweets@Tweets(Tweets.Body(_, _, meta@Tweets.Meta(_, last, count2, nextToken)), remaining, reset))) => 
           (Some(Tweets.Meta(ini, last, count+count2, nextToken)), error)
-        case ((meta, _), error: ErroneousSingleResponse) => 
+        case ((meta, _), SingleResponse.Error(error)) => 
           (meta, Some(error))
       })( (l, r) => r.map {
         case (meta, Some(error)) => PaginatedResponse.Error(error, meta)
@@ -99,11 +99,11 @@ object Run{
 
     def logPipeline: Source[SingleResponse, A] = 
       source.alsoToMat(Sink.fold(true){
-        case (_, RateLimitExceeded(delay)) => 
+        case (_, SingleResponse.RateLimitExceeded(delay)) => 
           system.log.info(s"Rate limit exceeded: waiting ${RateLimitReached.waitingTime(delay)} for next batch")
           true
 
-        case (isFirst, tweets@Tweets(Tweets.Body(_,_,meta), remaining, reset)) => 
+        case (isFirst, tweets@SingleResponse.Ok(Tweets(Tweets.Body(_,_,meta), remaining, reset))) => 
           if (isFirst) system.log.info(s"Received first response in batch:\n$meta; $remaining; $reset")
           else system.log.debug(s"Received response:\n$meta; $remaining; $reset")
           val rateLimit = RateLimitReached.unapply(tweets)
@@ -112,10 +112,10 @@ object Run{
           }
           rateLimit.isDefined
 
-        case (state, response: ErroneousSingleResponse) => 
+        case (state, SingleResponse.Error(response)) => 
           val error = response match { 
-            case ErroneousJsonSingleResponse(jsValue) => jsValue.prettyPrint
-            case ErroneousTextSingleResponse(text) => text 
+            case ErroneousSingleResponse.Json(jsValue) => jsValue.prettyPrint
+            case ErroneousSingleResponse.Text(text) => text 
           }
           system.log.error("Error found:\n" + error)
           state

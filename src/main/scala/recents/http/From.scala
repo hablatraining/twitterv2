@@ -16,6 +16,9 @@ import akka.stream.Materializer
 import spray.json._, DefaultJsonProtocol._
 
 object From extends HttpBody with RateLimitHeaders{
+    implicit val metaFormat: RootJsonFormat[Tweets.Meta] = jsonFormat4(Tweets.Meta.apply)
+    implicit val includesFormat: RootJsonFormat[Tweets.Includes] = jsonFormat1(Tweets.Includes.apply)
+    implicit val searchSingleResponseFormat: RootJsonFormat[Tweets.Body] = jsonFormat3(Tweets.Body.apply)
 
     def apply(response: HttpResponse)(implicit mat: Materializer, ec: ExecutionContext): Future[SingleResponse] =
         parseBody(response).map{ bodyE => 
@@ -23,26 +26,26 @@ object From extends HttpBody with RateLimitHeaders{
                 .orElse(parseRateLimitExceeded(response))
                 .orElse(parseErroneousTextResponse(bodyE))
                 .orElse(parseErroneousJsonResponse(bodyE))
-                .getOrElse(ErroneousTextSingleResponse("Not a search recent response"))
+                .getOrElse(SingleResponse.Error(ErroneousSingleResponse.Text("Not a search recent response")))
         }
 
-    def parseTweets(response: HttpResponse, bodyE: Either[String,JsValue]): Option[Tweets] = 
+    def parseTweets(response: HttpResponse, bodyE: Either[String,JsValue]): Option[SingleResponse.Ok] = 
         if (response.status != StatusCodes.OK) None
         else for {
             body <- bodyE.toOption
             tweets <- Try(body.convertTo[Tweets.Body]).toOption
             (rateRemaining, rateReset) <- parseRateLimitHeaders(response)
-        } yield Tweets(tweets, rateRemaining, rateReset)
+        } yield SingleResponse.Ok(Tweets(tweets, rateRemaining, rateReset))
 
-    def parseRateLimitExceeded(response: HttpResponse): Option[RateLimitExceeded] = 
+    def parseRateLimitExceeded(response: HttpResponse): Option[SingleResponse.RateLimitExceeded] = 
         if (response.status != StatusCodes.TooManyRequests) None
-        else parseRateLimitHeaders(response).map{ case (_, l) => RateLimitExceeded(l) }
+        else parseRateLimitHeaders(response).map{ case (_, l) => SingleResponse.RateLimitExceeded(l) }
 
-    def parseErroneousTextResponse(body: Either[String, JsValue]): Option[ErroneousJsonSingleResponse] = 
-        body.toOption.map(ErroneousJsonSingleResponse)
+    def parseErroneousTextResponse(body: Either[String, JsValue]): Option[SingleResponse.Error] = 
+        body.toOption.map(ErroneousSingleResponse.Json.apply).map(SingleResponse.Error.apply)
 
-    def parseErroneousJsonResponse(body: Either[String, JsValue]): Option[ErroneousTextSingleResponse] = 
-        body.swap.toOption.map(ErroneousTextSingleResponse)
+    def parseErroneousJsonResponse(body: Either[String, JsValue]): Option[SingleResponse.Error] = 
+        body.swap.toOption.map(ErroneousSingleResponse.Text.apply).map(SingleResponse.Error.apply)
 }
 
 trait HttpBody{
