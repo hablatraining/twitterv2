@@ -10,7 +10,7 @@ import akka.http.scaladsl.model.Uri
 
 object To{
         
-    def apply(search: SingleRequest): HttpRequest = {
+    def apply(search: Request.SingleRequest): HttpRequest = {
         val tweet_fields: String = "attachments,author_id,context_annotations,conversation_id,created_at,entities,geo,id,in_reply_to_user_id,lang,public_metrics,possibly_sensitive,referenced_tweets,reply_settings,source,text,withheld"
         val oauthHeader = Authorization(OAuth2BearerToken(search.bearer_token))
 

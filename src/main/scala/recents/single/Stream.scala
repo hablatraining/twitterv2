@@ -41,7 +41,7 @@ import akka.stream.scaladsl.FlowOpsMat
 
 object Stream{
 
-  def apply(search: SingleRequest)(implicit system: ActorSystem[_], ec: ExecutionContext): Source[SingleResponse, akka.NotUsed] = 
+  def apply(search: Request.SingleRequest)(implicit system: ActorSystem[_], ec: ExecutionContext): Source[SingleResponse, akka.NotUsed] = 
     Source.unfoldAsync(Option(search)){
       case state@Some(request) => 
         Run(request).map(response => Some((nextState(state, response), response)))
@@ -49,10 +49,10 @@ object Stream{
         Future.successful(None)
     }
 
-  def nextState: (Option[SingleRequest], SingleResponse) => Option[SingleRequest] = {
-    case (Some(request), response@Tweets(Tweets.Body(_, _, meta),_,_)) => 
+  def nextState: (Option[Request.SingleRequest], SingleResponse) => Option[Request.SingleRequest] = {
+    case (Some(request), SingleResponse.Ok(Tweets(Tweets.Body(_, _, meta),_,_))) => 
       meta.next_token.map(next => request.copy(next_token = Some(next)))
-    case (state, RateLimitExceeded(_)) => 
+    case (state, SingleResponse.RateLimitExceeded(_)) => 
       state
     case (_, _) => 
       None

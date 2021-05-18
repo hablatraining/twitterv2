@@ -11,7 +11,7 @@ import akka.http.scaladsl.Http
 
 object Run{
 
-  def apply(search: SingleRequest)(implicit system: ActorSystem[_]): Future[SingleResponse] = {
+  def apply(search: Request.SingleRequest)(implicit system: ActorSystem[_]): Future[SingleResponse] = {
     implicit val ec: ExecutionContext = system.executionContext
     Http().singleRequest(http.To(search))
       .flatMap(http.From.apply)

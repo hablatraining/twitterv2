@@ -6,18 +6,20 @@ import scala.concurrent.duration._
 
 import spray.json.JsValue
 
-sealed trait Response
+enum Response:
+  case Paginated(response: PaginatedResponse)
+  case Single(response: SingleResponse)
 
-sealed trait PaginatedResponse extends Response
+enum PaginatedResponse:
+  case Ok(meta: Option[Tweets.Meta])
+  case Error(error: ErroneousSingleResponse, meta: Option[Tweets.Meta])
 
-object PaginatedResponse{
-  case class Ok(meta: Option[Tweets.Meta]) extends PaginatedResponse
-  case class Error(error: ErroneousSingleResponse, meta: Option[Tweets.Meta]) extends PaginatedResponse
-}
+enum SingleResponse:
+  case Ok(tweets: Tweets)
+  case RateLimitExceeded(rateResetTime: Long)
+  case Error(error: ErroneousSingleResponse)
 
-sealed trait SingleResponse
-
-case class Tweets(body: Tweets.Body, rateRemaining: Int, rateReset: Long) extends SingleResponse
+case class Tweets(body: Tweets.Body, rateRemaining: Int, rateReset: Long)
 
 object Tweets extends JsonSupport{
   case class Body(data: Option[List[JsValue]], includes: Option[Includes], meta: Meta)
@@ -25,24 +27,16 @@ object Tweets extends JsonSupport{
   case class Includes(places: List[JsValue])
 }
 
-case class RateLimitExceeded(rateResetTime: Long) extends SingleResponse
+enum ErroneousSingleResponse:
+  case Json(data: JsValue)
+  case Text(data: String)
 
-sealed trait ErroneousSingleResponse extends Throwable with SingleResponse
-
-case class ErroneousJsonSingleResponse(data: JsValue) extends ErroneousSingleResponse{
-  override def toString: String = if (data != null) data.toString else "NULL"
-}
-
-case class ErroneousTextSingleResponse(data: String) extends ErroneousSingleResponse{
-  override def toString: String = data
-}
-
-trait JsonSupport{
+trait JsonSupport{ this: Tweets.type => 
     import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
     import spray.json._
     import DefaultJsonProtocol._
     
-    implicit val metaFormat = jsonFormat4(Tweets.Meta)
-    implicit val includesFormat = jsonFormat1(Tweets.Includes)
-    implicit val searchSingleResponseFormat = jsonFormat3(Tweets.Body)
+    implicit val metaFormat: RootJsonFormat[Meta] = jsonFormat4(Meta.apply)
+    implicit val includesFormat: RootJsonFormat[Includes] = jsonFormat1(Includes.apply)
+    implicit val searchSingleResponseFormat: RootJsonFormat[Body] = jsonFormat3(Body.apply)
 }
