@@ -16,7 +16,13 @@ object Main extends CommandApp[Command]{
    def run(command: Command, rargs: RemainingArgs): Unit =
       command match {
          case cmd: SearchRecent => runSearchRecent(cmd)
+         case cmd: LookupTweet => runLookupTweet(cmd)
       }
+
+   def runLookupTweet(cmd: LookupTweet): Unit = withExecutionContext{
+      implicit system => implicit ec => 
+         lookupt.akka.Run(cmd.toLookupTweetRequest)
+   }(println, _.printStackTrace)
 
    def runSearchRecent(search: SearchRecent): Unit = withExecutionContext{ 
       implicit system => implicit ec => search.toSearchRecentCommand match {

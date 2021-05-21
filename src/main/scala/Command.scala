@@ -2,6 +2,20 @@ package dev.habla.twitter.v2
 
 sealed abstract class Command
 
+case class LookupTweet(
+  id: String,
+  bearer_token: String, 
+  expansions: Option[String] = None, 
+  mediaFields: Option[String] = None,
+  placeFields: Option[String] = None,
+  pollFields: Option[String] = None,
+  tweetFields: Option[String] = None,
+  userFields: Option[String] = None)
+extends Command {
+  def toLookupTweetRequest: lookupt.Request = 
+    lookupt.Request(id, bearer_token, expansions, mediaFields, placeFields, pollFields, tweetFields, userFields)
+}
+
 case class SearchRecent(
   query: String, 
   bearer_token: String,

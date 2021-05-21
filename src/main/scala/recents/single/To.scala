@@ -1,16 +1,16 @@
 package dev.habla.twitter
 package v2
 package recents
-package http
+package single
 
 import akka.http.scaladsl.model.HttpRequest
 import akka.http.scaladsl.model.headers.Authorization
 import akka.http.scaladsl.model.headers.OAuth2BearerToken
 import akka.http.scaladsl.model.Uri
 
-object To{
+trait To extends api.akka.QueryParams{
         
-    def apply(search: SingleRequest): HttpRequest = {
+    def to(search: SingleRequest): HttpRequest = {
         val tweet_fields: String = "attachments,author_id,context_annotations,conversation_id,created_at,entities,geo,id,in_reply_to_user_id,lang,public_metrics,possibly_sensitive,referenced_tweets,reply_settings,source,text,withheld"
         val oauthHeader = Authorization(OAuth2BearerToken(search.bearer_token))
 
@@ -36,12 +36,4 @@ object To{
         headers = scala.collection.immutable.Seq(oauthHeader)
         )
     }  
-
-    implicit class QueryParams(params: Map[String, String]){
-        def add(name: String, value: Option[String]): Map[String, String] = 
-            value.fold(params){ v => params + ((name, v)) }
-        def add(name: String, value: String): Map[String, String] = 
-            add(name, Some(value))
-    }
-
 }
