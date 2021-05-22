@@ -9,7 +9,8 @@ import scala.concurrent.ExecutionContext
 import _root_.akka.http.scaladsl.Http
 import _root_.akka.stream.Materializer
 
-trait HttpEndpoint[Request, Response]{
+trait HttpEndpoint[Request]{
+    type Response
 
     def from(response: HttpResponse)(implicit mat: Materializer, as: ExecutionContext): Future[Response]
 
@@ -19,5 +20,18 @@ trait HttpEndpoint[Request, Response]{
         Http()
             .singleRequest(to(request))
             .flatMap(from)
+}
+
+object HttpEndpoint{
+
+    type Aux[Req, Res] = HttpEndpoint[Req]{type Response = Res }
+
+    trait Syntax{
+
+        implicit class RequestOps[Req, Res](request: Req)(implicit ep: HttpEndpoint.Aux[Req, Res]){
+            def single(implicit system: ActorSystem[_], ec: ExecutionContext): Future[Res] = 
+                ep(request)
+        }
+    }
 }
 

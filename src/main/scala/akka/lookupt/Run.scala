@@ -4,6 +4,8 @@ package lookupt
 
 import api.lookupt._
 
-object Run extends HttpEndpoint[Request, Response]
+object Run extends HttpEndpoint[Request]
     with From 
-    with To
+    with To{
+        type Response = api.lookupt.Response
+    }
