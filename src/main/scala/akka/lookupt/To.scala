@@ -1,13 +1,15 @@
 package dev.habla.twitter.v2
-package lookupt
 package akka
+package lookupt
 
 import _root_.akka.http.scaladsl.model.headers.Authorization
 import _root_.akka.http.scaladsl.model.HttpRequest
 import _root_.akka.http.scaladsl.model.headers.OAuth2BearerToken
 import _root_.akka.http.scaladsl.model.Uri
 
-trait To extends api.akka.QueryParams{
+import api.lookupt._
+
+trait To extends QueryParams{
           
     def to(request: Request): HttpRequest = 
         HttpRequest(

@@ -1,15 +1,16 @@
 package dev.habla.twitter.v2
+package main
 
 import scala.concurrent.ExecutionContext
 
-import akka.actor.typed.ActorSystem
-import akka.actor.typed.scaladsl.Behaviors
+import _root_.akka.actor.typed.ActorSystem
+import _root_.akka.actor.typed.scaladsl.Behaviors
 import caseapp._
-import dev.habla.twitter.v2.recents._
 import scala.util.Success
 import scala.util.Failure
 import scala.concurrent.Future
 
+import api.{recents, lookupt}
 
 object Main extends CommandApp[Command]{
 
@@ -21,15 +22,15 @@ object Main extends CommandApp[Command]{
 
    def runLookupTweet(cmd: LookupTweet): Unit = withExecutionContext{
       implicit system => implicit ec => 
-         lookupt.akka.Run(cmd.toLookupTweetRequest)
+         akka.lookupt.Run(cmd.toLookupTweetRequest)
    }(println, _.printStackTrace)
 
    def runSearchRecent(search: SearchRecent): Unit = withExecutionContext{ 
       implicit system => implicit ec => search.toSearchRecentCommand match {
-         case Right(singleRequest: SingleRequest) => 
-            recents.single.Run(singleRequest)
-         case Right(pagination: Pagination) => 
-            recents.pagination.Run(pagination)
+         case Right(singleRequest: recents.SingleRequest) => 
+            akka.recents.single.Run(singleRequest)
+         case Right(pagination: recents.Pagination) => 
+            akka.recents.pagination.Run(pagination)
          case Left(error) => 
             Future.failed(new Exception(error))
       }

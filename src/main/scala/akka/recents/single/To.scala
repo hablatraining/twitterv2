@@ -1,14 +1,16 @@
 package dev.habla.twitter
 package v2
+package akka
 package recents
 package single
 
-import akka.http.scaladsl.model.HttpRequest
-import akka.http.scaladsl.model.headers.Authorization
-import akka.http.scaladsl.model.headers.OAuth2BearerToken
-import akka.http.scaladsl.model.Uri
+import _root_.akka.http.scaladsl.model.HttpRequest
+import _root_.akka.http.scaladsl.model.headers.Authorization
+import _root_.akka.http.scaladsl.model.headers.OAuth2BearerToken
+import _root_.akka.http.scaladsl.model.Uri
+import api.recents._
 
-trait To extends api.akka.QueryParams{
+trait To extends QueryParams{
         
     def to(search: SingleRequest): HttpRequest = {
         val tweet_fields: String = "attachments,author_id,context_annotations,conversation_id,created_at,entities,geo,id,in_reply_to_user_id,lang,public_metrics,possibly_sensitive,referenced_tweets,reply_settings,source,text,withheld"

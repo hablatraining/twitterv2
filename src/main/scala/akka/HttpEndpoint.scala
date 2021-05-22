@@ -1,5 +1,4 @@
 package dev.habla.twitter.v2
-package api
 package akka
 
 import _root_.akka.http.scaladsl.model.HttpResponse

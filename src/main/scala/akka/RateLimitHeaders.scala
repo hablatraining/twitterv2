@@ -1,5 +1,4 @@
 package dev.habla.twitter.v2
-package api
 package akka
 
 import scala.jdk.OptionConverters._

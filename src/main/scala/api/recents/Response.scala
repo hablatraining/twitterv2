@@ -1,5 +1,6 @@
 package dev.habla.twitter
 package v2
+package api
 package recents
 
 import scala.concurrent.duration._
@@ -38,7 +39,7 @@ case class ErroneousTextSingleResponse(data: String) extends ErroneousSingleResp
 }
 
 trait JsonSupport{
-    import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
+    import _root_.akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
     import spray.json._
     import DefaultJsonProtocol._
     

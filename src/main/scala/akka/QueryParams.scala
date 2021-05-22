@@ -1,5 +1,5 @@
 package dev.habla.twitter.v2
-package api.akka
+package akka
 
 trait QueryParams{
 

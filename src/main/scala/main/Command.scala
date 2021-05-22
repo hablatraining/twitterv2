@@ -1,4 +1,7 @@
 package dev.habla.twitter.v2
+package main
+
+import api.{recents, lookupt}
 
 sealed abstract class Command
 
