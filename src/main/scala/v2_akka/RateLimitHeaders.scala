@@ -1,10 +1,9 @@
-package dev.habla.twitter.v2
-package akka
+package dev.habla.twitter.v2_akka
 
 import scala.jdk.OptionConverters._
-import _root_.akka.http.scaladsl.model.HttpResponse
-import _root_.akka.http.scaladsl.model.headers.ModeledCustomHeader
-import _root_.akka.http.scaladsl.model.headers.ModeledCustomHeaderCompanion
+import akka.http.scaladsl.model.HttpResponse
+import akka.http.scaladsl.model.headers.ModeledCustomHeader
+import akka.http.scaladsl.model.headers.ModeledCustomHeaderCompanion
 import scala.util.Try
 
 trait RateLimitHeaders{

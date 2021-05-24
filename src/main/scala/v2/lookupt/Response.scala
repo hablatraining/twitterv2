@@ -1,6 +1,5 @@
 package dev.habla.twitter
 package v2
-package api
 package lookupt
 
 import spray.json.JsValue

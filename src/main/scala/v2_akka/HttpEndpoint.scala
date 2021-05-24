@@ -1,13 +1,12 @@
-package dev.habla.twitter.v2
-package akka
+package dev.habla.twitter.v2_akka
 
-import _root_.akka.http.scaladsl.model.HttpResponse
-import _root_.akka.actor.typed.ActorSystem
+import akka.http.scaladsl.model.HttpResponse
+import akka.actor.typed.ActorSystem
 import scala.concurrent.Future
-import _root_.akka.http.scaladsl.model.HttpRequest
+import akka.http.scaladsl.model.HttpRequest
 import scala.concurrent.ExecutionContext
-import _root_.akka.http.scaladsl.Http
-import _root_.akka.stream.Materializer
+import akka.http.scaladsl.Http
+import akka.stream.Materializer
 
 trait HttpEndpoint[Request]{
     type Response

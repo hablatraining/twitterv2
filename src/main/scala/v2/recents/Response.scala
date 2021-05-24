@@ -1,6 +1,5 @@
 package dev.habla.twitter
 package v2
-package api
 package recents
 
 import scala.concurrent.duration._

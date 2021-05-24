@@ -1,13 +1,13 @@
-package dev.habla.twitter.v2
-package akka
+package dev.habla.twitter
+package v2_akka
 package lookupt
 
-import _root_.akka.http.scaladsl.model.headers.Authorization
-import _root_.akka.http.scaladsl.model.HttpRequest
-import _root_.akka.http.scaladsl.model.headers.OAuth2BearerToken
-import _root_.akka.http.scaladsl.model.Uri
+import akka.http.scaladsl.model.headers.Authorization
+import akka.http.scaladsl.model.HttpRequest
+import akka.http.scaladsl.model.headers.OAuth2BearerToken
+import akka.http.scaladsl.model.Uri
 
-import api.lookupt._
+import v2.lookupt._
 
 trait To extends QueryParams{
           

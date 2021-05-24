@@ -1,11 +1,10 @@
-package dev.habla.twitter.v2
-package akka
+package dev.habla.twitter.v2_akka
 
-import _root_.akka.http.scaladsl.model.HttpResponse
-import _root_.akka.stream.Materializer
+import akka.http.scaladsl.model.HttpResponse
+import akka.stream.Materializer
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
-import _root_.akka.http.scaladsl.unmarshalling.Unmarshal
+import akka.http.scaladsl.unmarshalling.Unmarshal
 import scala.util.Try
 import spray.json._, DefaultJsonProtocol._
 

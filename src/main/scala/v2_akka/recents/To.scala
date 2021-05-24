@@ -1,13 +1,12 @@
 package dev.habla.twitter
-package v2
-package akka
+package v2_akka
 package recents
 
-import _root_.akka.http.scaladsl.model.HttpRequest
-import _root_.akka.http.scaladsl.model.headers.Authorization
-import _root_.akka.http.scaladsl.model.headers.OAuth2BearerToken
-import _root_.akka.http.scaladsl.model.Uri
-import api.recents._
+import akka.http.scaladsl.model.HttpRequest
+import akka.http.scaladsl.model.headers.Authorization
+import akka.http.scaladsl.model.headers.OAuth2BearerToken
+import akka.http.scaladsl.model.Uri
+import v2.recents._
 
 trait To extends QueryParams{
         
