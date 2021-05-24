@@ -8,7 +8,7 @@
             "type": "scala",
             "request": "launch",
             "name": "Pagination",
-            "mainClass": "dev.habla.twitter.v2.Main",
+            "mainClass": "dev.habla.twitter.v2.main.Main",
             "args": [
                 "search-recent",
                 "--query", "scala",
@@ -24,10 +24,23 @@
             "type": "scala",
             "request": "launch",
             "name": "SingleRequest",
-            "mainClass": "dev.habla.twitter.v2.Main",
+            "mainClass": "dev.habla.twitter.v2.main.Main",
             "args": [
                 "search-recent",
                 "--query", "scala",
+                "--bearer_token", "AAAAAAAAAAAAAAAAAAAAALgwNAEAAAAAYYTOhnFM%2FSoI15Y5b6%2Fvszh4LNY%3DtC7grBm3dsr8HsiUVL3sSBmx9rbtUymV6zEqS1CQLeIFneDNH2"
+            ],
+            "jvmOptions": [],
+            "env": {}
+        },
+        {
+            "type": "scala",
+            "request": "launch",
+            "name": "LookupTweet",
+            "mainClass": "dev.habla.twitter.v2.main.Main",
+            "args": [
+                "lookup-tweet",
+                "--id", "787969995917656064",
                 "--bearer_token", "AAAAAAAAAAAAAAAAAAAAALgwNAEAAAAAYYTOhnFM%2FSoI15Y5b6%2Fvszh4LNY%3DtC7grBm3dsr8HsiUVL3sSBmx9rbtUymV6zEqS1CQLeIFneDNH2"
             ],
             "jvmOptions": [],

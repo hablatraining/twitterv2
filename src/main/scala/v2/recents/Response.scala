@@ -11,8 +11,8 @@ sealed trait Response
 sealed trait PaginatedResponse extends Response
 
 object PaginatedResponse{
-  case class Ok(meta: Option[Tweets.Meta]) extends PaginatedResponse
-  case class Error(error: ErroneousSingleResponse, meta: Option[Tweets.Meta]) extends PaginatedResponse
+  case class Ok(meta: Option[Meta]) extends PaginatedResponse
+  case class Error(error: ErroneousSingleResponse, meta: Option[Meta]) extends PaginatedResponse
 }
 
 sealed trait SingleResponse
@@ -20,8 +20,7 @@ sealed trait SingleResponse
 case class Tweets(body: Tweets.Body, rateRemaining: Int, rateReset: Long) extends SingleResponse
 
 object Tweets extends JsonSupport{
-  case class Body(data: Option[List[JsValue]], includes: Option[Includes], meta: Meta)
-  case class Meta(newest_id: Option[String], oldest_id: Option[String], result_count: Int, next_token: Option[String])
+  case class Body(data: Option[List[Tweet]], includes: Option[Includes], meta: Meta)
   case class Includes(places: List[JsValue])
 }
 
@@ -38,11 +37,10 @@ case class ErroneousTextSingleResponse(data: String) extends ErroneousSingleResp
 }
 
 trait JsonSupport{
-    import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
+    import _root_.akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
     import spray.json._
     import DefaultJsonProtocol._
     
-    implicit val metaFormat = jsonFormat4(Tweets.Meta)
     implicit val includesFormat = jsonFormat1(Tweets.Includes)
     implicit val searchSingleResponseFormat = jsonFormat3(Tweets.Body)
 }

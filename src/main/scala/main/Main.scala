@@ -1,29 +1,35 @@
-package dev.habla.twitter.v2
+package dev.habla.twitter
+package v2
+package main
 
 import scala.concurrent.ExecutionContext
 
-import akka.actor.typed.ActorSystem
-import akka.actor.typed.scaladsl.Behaviors
+import _root_.akka.actor.typed.ActorSystem
+import _root_.akka.actor.typed.scaladsl.Behaviors
 import caseapp._
-import dev.habla.twitter.v2.recents._
 import scala.util.Success
 import scala.util.Failure
 import scala.concurrent.Future
-
 
 object Main extends CommandApp[Command]{
 
    def run(command: Command, rargs: RemainingArgs): Unit =
       command match {
          case cmd: SearchRecent => runSearchRecent(cmd)
+         case cmd: LookupTweet => runLookupTweet(cmd)
       }
+
+   def runLookupTweet(cmd: LookupTweet): Unit = withExecutionContext{
+      implicit system => implicit ec => 
+         v2_akka.lookupt.Run(cmd.toLookupTweetRequest)
+   }(println, _.printStackTrace)
 
    def runSearchRecent(search: SearchRecent): Unit = withExecutionContext{ 
       implicit system => implicit ec => search.toSearchRecentCommand match {
-         case Right(singleRequest: SingleRequest) => 
-            recents.single.Run(singleRequest)
-         case Right(pagination: Pagination) => 
-            recents.pagination.Run(pagination)
+         case Right(singleRequest: recents.SingleRequest) => 
+            v2_akka.recents.Run(singleRequest)
+         case Right(pagination: recents.Pagination) => 
+            v2_akka.recents.RunPagination(pagination)
          case Left(error) => 
             Future.failed(new Exception(error))
       }
