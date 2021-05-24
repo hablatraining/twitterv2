@@ -2,7 +2,6 @@ package dev.habla.twitter
 package v2
 package akka
 package recents
-package single
 
 import _root_.akka.http.scaladsl.model.HttpRequest
 import _root_.akka.http.scaladsl.model.headers.Authorization

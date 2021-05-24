@@ -28,9 +28,9 @@ object Main extends CommandApp[Command]{
    def runSearchRecent(search: SearchRecent): Unit = withExecutionContext{ 
       implicit system => implicit ec => search.toSearchRecentCommand match {
          case Right(singleRequest: recents.SingleRequest) => 
-            akka.recents.single.Run(singleRequest)
+            akka.recents.Run(singleRequest)
          case Right(pagination: recents.Pagination) => 
-            akka.recents.pagination.Run(pagination)
+            akka.recents.RunPagination(pagination)
          case Left(error) => 
             Future.failed(new Exception(error))
       }

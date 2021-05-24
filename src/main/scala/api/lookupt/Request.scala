@@ -6,9 +6,9 @@ package lookupt
 case class Request(
   id: String,
   bearerToken: String, 
-  expansions: Option[String], 
-  mediaFields: Option[String],
-  placeFields: Option[String],
-  pollFields: Option[String],
-  tweetFields: Option[String],
-  userFields: Option[String])
+  expansions: Option[String] = None, 
+  mediaFields: Option[String] = None,
+  placeFields: Option[String] = None,
+  pollFields: Option[String] = None,
+  tweetFields: Option[String] = None,
+  userFields: Option[String] = None)

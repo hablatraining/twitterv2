@@ -10,7 +10,7 @@ sealed trait Response
 case class TweetInfo(body: TweetInfo.Body, rateRemaining: Int, rateReset: Long) extends Response
 
 object TweetInfo extends JsonSupport{
-  case class Body(data: JsValue, includes: Option[Includes])
+  case class Body(data: Tweet, includes: Option[Includes])
   case class Includes(places: List[JsValue])
 }
 

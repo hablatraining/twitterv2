@@ -2,7 +2,6 @@ package dev.habla.twitter
 package v2
 package akka
 package recents
-package pagination
 
 import java.nio.file.Paths
 import java.time.LocalDate
@@ -40,12 +39,18 @@ import spray.json.DefaultJsonProtocol._
 import spray.json._
 import _root_.akka.stream.scaladsl.FlowOpsMat
 
-import api.recents._
+import api.Meta, api.recents._
 
-object Run{
-
+object RunPagination{
+  
+  def stream(request: SingleRequest)(implicit system: ActorSystem[_], ec: ExecutionContext): Source[Tweets, Future[PaginatedResponse]] = 
+    Run.stream(request)
+      .updateResult
+      .throttlePipeline
+      .collect{ case tweets: Tweets => tweets }
+  
   def apply(cmd: Pagination)(implicit system: ActorSystem[_], ec: ExecutionContext): Future[PaginatedResponse] = 
-    Stream(cmd.request)
+    Run.stream(cmd.request)
       .take(cmd.max, cmd.request.max_results)
       .updateResult
       .logPipeline
@@ -86,13 +91,13 @@ object Run{
       }
 
     def updateResult: Source[SingleResponse, Future[PaginatedResponse]] = 
-      source.alsoToMat(Sink.fold((None: Option[Tweets.Meta], None: Option[ErroneousSingleResponse])){
+      source.alsoToMat(Sink.fold((None: Option[Meta], None: Option[ErroneousSingleResponse])){
         case ((None, _), tweets: Tweets) => 
           (Some(tweets.body.meta), None)
         case (state, RateLimitExceeded(delay)) => 
           state
-        case ((Some(Tweets.Meta(ini, _, count, _)),error), tweets@Tweets(Tweets.Body(_, _, meta@Tweets.Meta(_, last, count2, nextToken)), remaining, reset)) => 
-          (Some(Tweets.Meta(ini, last, count+count2, nextToken)), error)
+        case ((Some(Meta(ini, _, count, _)),error), tweets@Tweets(Tweets.Body(_, _, meta@Meta(_, last, count2, nextToken)), remaining, reset)) => 
+          (Some(Meta(ini, last, count+count2, nextToken)), error)
         case ((meta, _), error: ErroneousSingleResponse) => 
           (meta, Some(error))
       })( (l, r) => r.map {

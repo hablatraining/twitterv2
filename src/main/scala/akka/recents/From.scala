@@ -2,7 +2,6 @@ package dev.habla.twitter
 package v2
 package akka
 package recents
-package single
 
 import scala.jdk.OptionConverters._
 import scala.util.Try
@@ -15,7 +14,6 @@ import _root_.akka.http.scaladsl.model.headers.ModeledCustomHeader
 import _root_.akka.http.scaladsl.model.headers.ModeledCustomHeaderCompanion
 import _root_.akka.stream.Materializer
 import spray.json._, DefaultJsonProtocol._
-import api.akka._
 import api.recents._
 
 trait From extends HttpBody with RateLimitHeaders{
