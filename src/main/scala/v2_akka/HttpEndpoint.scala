@@ -27,7 +27,7 @@ object HttpEndpoint{
 
     trait Syntax{
 
-        implicit class RequestOps[Req, Res](request: Req)(implicit ep: HttpEndpoint.Aux[Req, Res]){
+        implicit class HttpEndpointRequestOps[Req, Res](request: Req)(implicit ep: HttpEndpoint.Aux[Req, Res]){
             def single(implicit system: ActorSystem[_], ec: ExecutionContext): Future[Res] = 
                 ep(request)
         }

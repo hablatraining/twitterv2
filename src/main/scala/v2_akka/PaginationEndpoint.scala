@@ -41,7 +41,10 @@ import v2._
 
 trait PaginationEndpoint[Request] extends HttpEndpoint[Request]{
 
-    def foldResponse[A](response: Response)(ok: (Int, Long, Meta) => A, limit: Long => A, other: => A): A
+    def foldResponse[A](response: Response)(
+        ok: (Int, Long, Meta) => A, 
+        limit: Long => A, 
+        other: => A): A
 
     def updateNextToken(request: Request, next: String): Request
 
@@ -89,4 +92,12 @@ trait PaginationEndpoint[Request] extends HttpEndpoint[Request]{
 
 object PaginationEndpoint{
     type Aux[Req, Res] = PaginationEndpoint[Req]{ type Response = Res }
+
+    trait Syntax{
+
+        implicit class PaginationEndpointRequestOps[Req, Res](request: Req)(implicit ep: PaginationEndpoint.Aux[Req, Res]){
+            def stream(implicit system: ActorSystem[_], ec: ExecutionContext): Source[Res, NotUsed] = 
+                ep.stream(request)
+        }
+    }
 }
