@@ -8,6 +8,35 @@ import scala.util.Try
 
 trait RateLimitHeaders{
   
+    def parseRateLimitHeaders1(response: HttpResponse): Option[(Int, Long)] = 
+        response.getHeader(XRateLimitReset.name).toScala.flatMap{ rateResetH =>
+            Try(java.lang.Long.parseLong(rateResetH.value())).toOption.flatMap{ rateReset =>
+                response.getHeader(XRateLimitRemaining.name).toScala.flatMap{ rateRemainingH =>
+                    Try(Integer.parseInt(rateRemainingH.value())).toOption.map{ rateRemaining =>
+                        (rateRemaining, rateReset)
+                    }
+                }
+            }
+        }
+
+    def parseRateLimitHeaders2(response: HttpResponse): Option[(Int, Long)] = 
+        response.getHeader(XRateLimitReset.name).toScala match {
+            case None => None 
+            case Some(rateResetH) =>
+                Try(java.lang.Long.parseLong(rateResetH.value())).toOption match { 
+                    case None => None
+                    case Some(rateReset) =>
+                        response.getHeader(XRateLimitRemaining.name).toScala match {
+                            case None => None
+                            case Some(rateRemainingH) =>
+                                Try(Integer.parseInt(rateRemainingH.value())).toOption match {
+                                    case None => None 
+                                    case Some(rateRemaining) => Some((rateRemaining, rateReset))
+                            }
+                        }
+                }
+        }
+
     def parseRateLimitHeaders(response: HttpResponse): Option[(Int, Long)] = 
         for {
             rateResetH <- response.getHeader(XRateLimitReset.name).toScala
