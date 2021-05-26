@@ -41,12 +41,16 @@ import v2._
 
 trait PaginationEndpoint[Request] extends HttpEndpoint[Request]{
 
+    /* abstract interface */
+    
     def foldResponse[A](response: Response)(
         ok: (Int, Long, Meta) => A, 
         limit: Long => A, 
         other: => A): A
 
     def updateNextToken(request: Request, next: String): Request
+
+    /* concrete interface */
 
     def stream(search: Request)(implicit system: ActorSystem[_], ec: ExecutionContext): Source[Response, NotUsed] = 
         Source.unfoldAsync(Option(search)){
@@ -92,12 +96,16 @@ trait PaginationEndpoint[Request] extends HttpEndpoint[Request]{
 
 object PaginationEndpoint{
     type Aux[Req, Res] = PaginationEndpoint[Req]{ type Response = Res }
+}
 
-    trait Syntax{
-
-        implicit class PaginationEndpointRequestOps[Req, Res](request: Req)(implicit ep: PaginationEndpoint.Aux[Req, Res]){
-            def stream(implicit system: ActorSystem[_], ec: ExecutionContext): Source[Res, NotUsed] = 
-                ep.stream(request)
-        }
+trait PaginationEndpointSyntax{
+    implicit class PaginationEndpointRequestOps[Req, Res](request: Req)(implicit ep: PaginationEndpoint.Aux[Req, Res]){
+        def stream(implicit system: ActorSystem[_], ec: ExecutionContext): Source[Res, NotUsed] = 
+            ep.stream(request)
     }
 }
+
+trait PaginationEndpointInstances{
+    implicit val recentsEndpoint: PaginationEndpoint.Aux[v2.recents.SingleRequest, v2.recents.SingleResponse] = v2_akka.recents.Run
+}
+
