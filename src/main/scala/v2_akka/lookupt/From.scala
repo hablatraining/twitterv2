@@ -19,14 +19,14 @@ trait From extends HttpBody with RateLimitHeaders{
 
     def from(response: HttpResponse)(implicit mat: Materializer, ec: ExecutionContext): Future[Response] =
         parseBody(response).map{ bodyE => 
-            parseTweets(response, bodyE)
+            parseTweetInfo(response, bodyE)
                 .orElse(parseRateLimitExceeded(response))
                 .orElse(parseErroneousTextResponse(bodyE))
                 .orElse(parseErroneousJsonResponse(bodyE))
-                .getOrElse(ErroneousTextResponse("Not a search recent response"))
+                .getOrElse(ErroneousTextResponse("Not a lookup response"))
         }
 
-    def parseTweets(response: HttpResponse, bodyE: Either[String,JsValue]): Option[TweetInfo] = 
+    def parseTweetInfo(response: HttpResponse, bodyE: Either[String,JsValue]): Option[TweetInfo] = 
         for {
             body <- bodyE.toOption if response.status == StatusCodes.OK
             tweets <- Try(body.convertTo[TweetInfo.Body]).toOption

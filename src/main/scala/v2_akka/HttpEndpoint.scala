@@ -10,9 +10,9 @@ import akka.http.scaladsl.Http
 import akka.stream.Materializer
 
 trait HttpEndpoint[Request]{
-    type Response
-
     /* abstract interface */
+
+    type Response
 
     def from(response: HttpResponse)(implicit mat: Materializer, as: ExecutionContext): Future[Response]
 
@@ -33,11 +33,12 @@ trait HttpEndpointSyntax{
 
     implicit class HttpEndpointRequestOps[Req, Res](request: Req)(implicit ep: HttpEndpoint.Aux[Req, Res]){
         def single(implicit system: ActorSystem[_], ec: ExecutionContext): Future[Res] = 
-            ep(request)
+            ep.apply(request)
     }
 }
 
 trait HttpEndpointInstances{
-    implicit val lookuptEndpoint: HttpEndpoint.Aux[v2.lookupt.Request, v2.lookupt.Response] = v2_akka.lookupt.Run
+    implicit val lookuptEndpoint: HttpEndpoint.Aux[v2.lookupt.Request, v2.lookupt.Response] = 
+        v2_akka.lookupt.Run
 }
 
