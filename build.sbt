@@ -1,6 +1,7 @@
 name := "twitterapiv2"
-scalaVersion := "2.13.4"
+scalaVersion := "2.13.7"
 version := "0.1"
+
 
 val AkkaVersion = "2.6.8"
 val AkkaHttpVersion = "10.2.4"
@@ -17,7 +18,11 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-slf4j" % AkkaVersion,
   "com.typesafe.akka" %% "akka-actor-typed" % AkkaVersion,
   "com.typesafe.akka" %% "akka-stream" % AkkaVersion,
-  "com.typesafe.akka" %% "akka-http" % AkkaHttpVersion)
+  "com.typesafe.akka" %% "akka-http" % AkkaHttpVersion,
+  "com.lihaoyi" %% "requests" % "0.7.0",
+  "com.lihaoyi" %% "upickle" % "1.4.3",
+  "com.lihaoyi" %% "os-lib" % "0.8.0"
+)
 
   testFrameworks += new TestFramework("utest.runner.Framework")
 
