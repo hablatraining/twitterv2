@@ -49,8 +49,3 @@ object Main extends CommandApp[Command]{
    }
 }
 
-val saludo: Int => String {
-   implicit idioma =>
-      "Manolo" concat str(idioma)
-   }
-
