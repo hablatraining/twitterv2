@@ -1,14 +1,18 @@
 
+
+
 val token: String = os.read(os.home / "Documents" / "credentials_tw" / "bearer_token.txt").trim()
 val bearer_oauth: String = s"Bearer $token"
 
+// CASO DE USO DEL ENDPOINT RECENTS
+
 val url: String = "https://api.twitter.com/2/tweets/search/recent"
 
-val query_params = Map("query" -> "(from:twitterdev -is:retweet) OR #twitterdev", "tweet.fields" -> "author_id")
+val queryParams = Map("query" -> "(from:EvilAFM -is:retweet) OR #EvilAFM", "tweet.fields" -> "author_id")
 
 val r = requests.get(
   url,
-  params = query_params,
+  params = queryParams,
   headers = Map("Authorization" -> bearer_oauth)
 )
 
@@ -43,13 +47,40 @@ def mix_text(v: ujson.Value) : Iterable[String] = {
 
 val publicacion : String = mix_text(data_tweets).mkString("_")
 
-// Hacer ahora una petición POST y cambiar dónde tengo guardado este worksheet
 
-val post = requests.post(
-  "https://api.twitter.com/1.1/statuses/update.json",
-  params = Map("status" -> publicacion),
+// CASO DE USO DEL ENDPOINT LOOKUPU
+// Primero buscando múltiples por id: GET /2/users
+
+val url: String = "https://api.twitter.com/2/users"
+val query_params_users = Map("ids" -> "61879392,2244994945")
+
+val r = requests.get(
+  url,
+  params = query_params_users,
   headers = Map("Authorization" -> bearer_oauth)
 )
+val data = ujson.read(r.text())
 
-println(post.statusCode)
-println(post.headers("content-type"))
+val data_tweets : ujson.Value = ujson.read(ujson.write(data("data")))
+
+def loop(current: Int): Unit = {
+  if (current >= 0) {
+    println(data_tweets(current).render(indent = 4))
+    loop(current - 1)
+  }
+}
+
+//Ahora buscando varios por username
+
+val url: String = "https://api.twitter.com/2/users"
+val queryParamsMultipleUsers : Map[String, String] = Map("usernames" -> "EvilAFM,Twitterdev,mangelrogel")
+
+val r = requests.get(
+  url,
+  params = query_params_users,
+  headers = Map("Authorization" -> bearer_oauth)
+)
+val data = ujson.read(r.text())
+
+val dataTweets : ujson.Value = ujson.read(ujson.write(data("data")))
+loop(1)
