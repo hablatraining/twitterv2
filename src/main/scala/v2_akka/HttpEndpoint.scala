@@ -25,7 +25,7 @@ trait HttpEndpoint[Request]{
             .flatMap(from)
 }
 
-object HttpEndpoint{
+object HttpEndpoint extends HttpEndpointInstances with HttpEndpointSyntax{
     type Aux[Req, Res] = HttpEndpoint[Req]{type Response = Res }
 }
 

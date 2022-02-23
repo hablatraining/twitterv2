@@ -1,4 +1,5 @@
-package v2_requests.lookupt
+package v2_requests
+package lookupt
 
 import akka.http.scaladsl.model.{HttpResponse, StatusCodes}
 import akka.stream.Materializer
@@ -6,6 +7,7 @@ import spray.json._
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Try
+
 
 trait From extends HttpBody with RateLimitHeaders{
 

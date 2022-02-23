@@ -1,4 +1,10 @@
-package v2_requests.lookupt
+package dev.habla.twitter
+package v2_requests
+package lookupt
+
+
+import dev.habla.twitter.v2.lookupt.Request
+import v2_requests.lookupt.{From, To}
 
 object Run extends HttpEndpoint[Request]
     with From 
