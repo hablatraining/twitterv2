@@ -12,7 +12,7 @@ val bearer_oauth: String = s"Bearer $token"
 
 val url: String = "https://api.twitter.com/2/tweets/search/recent"
 
-val queryParams = Map("query" -> "(from:EvilAFM -is:retweet) OR #EvilAFM", "tweet.fields" -> "author_id")
+val queryParams = Map("query" -> "from:Escapatrisia", "tweet.fields" -> "author_id")
 
 val r: Response = requests.get(
   url,
@@ -22,6 +22,15 @@ val r: Response = requests.get(
 
 println(r.statusCode)
 println(r.headers("content-type"))
+
+r.headers("x-rate-limit-reset")
+println("Hola me he descargao tos tus tuits xDDD")
+r.headers("x-rate-limit-remaining")
+
+r.headers.foreach{
+  kv => println(kv._1)
+}
+r.
 
 val data = ujson.read(r.text())
 
@@ -91,7 +100,9 @@ loop(1)
 
 //Hacer caso de uso utilizando el Requester y no el método get
 
-val mi_request: Request = requests.Request(url, headers = Map("Authorization" -> bearer_oauth), params = query_params_users)
+val mi_request: Request = requests.Request(url,
+  headers = Map("Authorization" -> bearer_oauth),
+  params = query_params_users)
 
 object MySession extends BaseSession {
   def cookies = requests.cookies

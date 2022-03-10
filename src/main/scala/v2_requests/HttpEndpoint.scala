@@ -1,8 +1,9 @@
-package dev.habla.twitter
 package v2_requests
 
 
 import requests.{BaseSession, Cert, Compress, RequestBlob, Requester}
+import dev.habla.twitter.v2
+
 
 import javax.net.ssl.SSLContext
 
@@ -18,49 +19,16 @@ trait HttpEndpoint[Request]{
     /* concrete interface */
 
     def apply(request: Request): Response = {
-        //plantearse si poner el basesession como variable implícita
-        //esto solo vale para peticiones GET, a lo mejor se puede hacer más general
+        //plantearse si poner el basesession como variable implícit
         from{
-            requests.Requester("GET", HttpEndpoint.MySession)
-              .apply(to(request), RequestBlob.EmptyRequestBlob, HttpEndpoint.MySession.chunkedUpload)
+            requests.get
+              .apply(to(request), RequestBlob.EmptyRequestBlob, requests.chunkedUpload)
         }
     }
 }
 
 object HttpEndpoint{
     type Aux[Req, Res] = HttpEndpoint[Req]{type Response = Res }
-
-    object MySession extends BaseSession {
-        def cookies = requests.cookies
-
-        val headers = requests.headers
-
-        def auth = requests.auth
-
-        def proxy = requests.proxy
-
-        def cert: Cert = requests.cert
-
-        def sslContext: SSLContext = requests.sslContext
-
-        def maxRedirects: Int = requests.maxRedirects
-
-        def persistCookies = requests.persistCookies
-
-        def readTimeout: Int = requests.readTimeout
-
-        def connectTimeout: Int = requests.connectTimeout
-
-        def verifySslCerts: Boolean = requests.verifySslCerts
-
-        def autoDecompress: Boolean = requests.autoDecompress
-
-        def compress: Compress = requests.compress
-
-        def chunkedUpload: Boolean = requests.chunkedUpload
-
-        def check: Boolean = requests.check
-    }
 }
 
 trait HttpEndpointSyntax{

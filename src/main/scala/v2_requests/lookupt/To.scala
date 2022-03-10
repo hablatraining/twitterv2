@@ -1,19 +1,18 @@
 package v2_requests.lookupt
 
-import akka.http.scaladsl.model.{HttpRequest, Uri}
-import akka.http.scaladsl.model.headers.{Authorization, OAuth2BearerToken}
+import dev.habla.twitter.v2.lookupt.Request
+import v2_requests.QueryParams
 
 trait To extends QueryParams{
           
-    def to(request: Request): HttpRequest = 
-        HttpRequest(
-            uri = Uri(s"https://api.twitter.com/2/tweets/${request.id}")
-                    .withQuery(Uri.Query.apply(
-                            Map[String, String]()
-                                .add("expansions", request.expansions)
-                                .add("tweet.fields", request.tweetFields)
-                                .add("place.fields", request.placeFields))),
-            headers = Seq(Authorization(OAuth2BearerToken(request.bearerToken)))
+    def to(request: Request): requests.Request = {
+        requests.Request(
+            url = s"https://api.twitter.com/2/tweets/${request.id}",
+            params = Map[String, String]()
+              .add("expansions", request.expansions)
+              .add("tweet.fields", request.tweetFields)
+              .add("place.fields", request.placeFields),
+            headers = Map("Authorization" -> request.bearerToken)
         )
+    }
 }
-

@@ -1,17 +1,15 @@
 package v2_requests
 package lookupt
 
-import akka.http.scaladsl.model.{HttpResponse, StatusCodes}
-import akka.stream.Materializer
+import dev.habla.twitter.v2.lookupt._
 import spray.json._
 
-import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Try
 
 
 trait From extends HttpBody with RateLimitHeaders{
 
-    def from(response: HttpResponse)(implicit mat: Materializer, ec: ExecutionContext): Future[Response] =
+    def from(response: requests.Response): Response =
         parseBody(response).map{ bodyE => 
             parseTweetInfo(response, bodyE)
                 .orElse(parseRateLimitExceeded(response))
@@ -20,15 +18,15 @@ trait From extends HttpBody with RateLimitHeaders{
                 .getOrElse(ErroneousTextResponse("Not a lookup response"))
         }
 
-    def parseTweetInfo(response: HttpResponse, bodyE: Either[String,JsValue]): Option[TweetInfo] = 
+    def parseTweetInfo(response: requests.Response, bodyE: Either[String,JsValue]): Option[TweetInfo] =
         for {
-            body <- bodyE.toOption if response.status == StatusCodes.OK
+            body <- bodyE.toOption if response.statusCode == 200
             tweets <- Try(body.convertTo[TweetInfo.Body]).toOption
             (rateRemaining, rateReset) <- parseRateLimitHeaders(response)
         } yield TweetInfo(tweets, rateRemaining, rateReset)
 
-    def parseRateLimitExceeded(response: HttpResponse): Option[RateLimitExceeded] = 
-        if (response.status != StatusCodes.TooManyRequests) None
+    def parseRateLimitExceeded(response: requests.Response): Option[RateLimitExceeded] =
+        if (response.statusCode != 429) None
         else parseRateLimitHeaders(response).map{ case (_, l) => RateLimitExceeded(l) }
 
     def parseErroneousTextResponse(body: Either[String, JsValue]): Option[ErroneousJsonResponse] = 
