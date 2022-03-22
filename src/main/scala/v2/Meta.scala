@@ -1,4 +1,4 @@
-package dev.habla.twitter.v2
+package v2
 
 case class Meta(newest_id: Option[String], oldest_id: Option[String], result_count: Int, next_token: Option[String])
 

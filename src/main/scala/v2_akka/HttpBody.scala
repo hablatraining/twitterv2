@@ -1,4 +1,4 @@
-package dev.habla.twitter.v2_akka
+package v2_akka
 
 import akka.http.scaladsl.model.HttpResponse
 import akka.stream.Materializer

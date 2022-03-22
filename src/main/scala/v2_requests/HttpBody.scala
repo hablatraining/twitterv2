@@ -1,6 +1,6 @@
 package v2_requests
 
-//Esto de usar spray habría que cambiarlo
+//Esto de usar spray habría que cambiarlo (también en la carpeta v2)
 import spray.json._
 import scala.util.Try
 

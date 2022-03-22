@@ -1,11 +1,8 @@
 package v2_requests
 
 
-import requests.{BaseSession, Cert, Compress, RequestBlob, Requester}
-import dev.habla.twitter.v2
-
-
-import javax.net.ssl.SSLContext
+import requests.RequestBlob
+import v2._
 
 trait HttpEndpoint[Request]{
     /* abstract interface */
@@ -19,7 +16,6 @@ trait HttpEndpoint[Request]{
     /* concrete interface */
 
     def apply(request: Request): Response = {
-        //plantearse si poner el basesession como variable implícit
         from{
             requests.get
               .apply(to(request), RequestBlob.EmptyRequestBlob, requests.chunkedUpload)
@@ -40,7 +36,7 @@ trait HttpEndpointSyntax{
 }
 
 trait HttpEndpointInstances{
-    implicit val lookuptEndpoint: HttpEndpoint.Aux[v2.lookupt.Request, v2.lookupt.Response] = 
+    implicit val lookuptEndpoint: HttpEndpoint.Aux[lookupt.Request, lookupt.Response] =
         v2_requests.lookupt.Run
 }
 

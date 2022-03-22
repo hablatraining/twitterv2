@@ -1,4 +1,3 @@
-package dev.habla.twitter
 package v2_akka
 package recents
 

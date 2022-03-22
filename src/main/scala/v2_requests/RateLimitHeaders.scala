@@ -15,11 +15,13 @@ trait RateLimitHeaders {
             rateRemaining <- Try(rateRemainingH.toInt).toOption
         } yield (rateRemaining, rateReset)
 
-        /*val valor = response.headers("x-rate-limit-reset").flatMap(rateResetH =>
+        /*
+        val valor = response.headers("x-rate-limit-reset").flatMap(rateResetH =>
             Try(rateResetH.toLong).toOption.flatMap(rateReset =>
                 response.headers("x-rate-limit-remaining").flatMap(rateRemainingH =>
                     Try(rateRemainingH.toInt).toOption.map(rateRemaining =>
-            (rateRemaining, rateReset))))).headOption */
+            (rateRemaining, rateReset))))).headOption
+         */
     }
 
 

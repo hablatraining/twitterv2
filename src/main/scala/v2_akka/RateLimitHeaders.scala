@@ -1,4 +1,4 @@
-package dev.habla.twitter.v2_akka
+package v2_akka
 
 import scala.jdk.OptionConverters._
 import akka.http.scaladsl.model.HttpResponse

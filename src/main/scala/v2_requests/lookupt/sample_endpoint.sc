@@ -1,18 +1,35 @@
 import requests.{Request, RequestBlob, Response}
 import requests._
+import v2_requests._
 
-import java.net.HttpCookie
 import javax.net.ssl.SSLContext
-import scala.collection.mutable
 
 val token: String = os.read(os.home / "Documents" / "credentials_tw" / "bearer_token.txt").trim()
 val bearer_oauth: String = s"Bearer $token"
 
-// CASO DE USO DEL ENDPOINT RECENTS
+//CASO DE USO DEL ENDPOINT V2_REQUESTS (lookupt)
+
+val endPoint = v2_requests.lookupt.Run
+
+val miRequest: v2.lookupt.Request = v2.lookupt.Request("654", bearer_oauth)
+
+val miResponse: endPoint.Response = endPoint.apply(miRequest)
+
+println(miResponse)
+
+
+val response : v2.lookupt.Response =
+  v2.lookupt.Request("1505899990417391618", bearer_oauth)
+    .single
+
+println(response)
+
+
+// CASO DE USO DEL ENDPOINT RECENTS con requests
 
 val url: String = "https://api.twitter.com/2/tweets/search/recent"
 
-val queryParams = Map("query" -> "from:Escapatrisia", "tweet.fields" -> "author_id")
+val queryParams = Map("query" -> "from:EvilAFM", "tweet.fields" -> "author_id")
 
 val r: Response = requests.get(
   url,
@@ -30,7 +47,7 @@ r.headers("x-rate-limit-remaining")
 r.headers.foreach{
   kv => println(kv._1)
 }
-r.
+
 
 val data = ujson.read(r.text())
 

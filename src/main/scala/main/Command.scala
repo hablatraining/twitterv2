@@ -1,6 +1,6 @@
-package dev.habla.twitter
-package v2
 package main
+
+import v2._
 
 sealed abstract class Command
 

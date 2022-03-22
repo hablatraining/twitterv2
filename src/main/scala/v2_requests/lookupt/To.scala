@@ -1,6 +1,6 @@
 package v2_requests.lookupt
 
-import dev.habla.twitter.v2.lookupt.Request
+import v2.lookupt.Request
 import v2_requests.QueryParams
 
 trait To extends QueryParams{
