@@ -13,13 +13,13 @@ val endPoint = v2_requests.lookupt.Run
 
 val miRequest: v2.lookupt.Request = v2.lookupt.Request("654", bearer_oauth)
 
-val miResponse: endPoint.Response = endPoint.apply(miRequest)
+val miResponse: v2.lookupt.Response = endPoint.apply(miRequest)
 
 println(miResponse)
 
 
 val response : v2.lookupt.Response =
-  v2.lookupt.Request("1505899990417391618", bearer_oauth)
+  v2.lookupt.Request("10000000000", bearer_oauth)
     .single
 
 println(response)
