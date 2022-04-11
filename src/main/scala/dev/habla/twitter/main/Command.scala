@@ -44,3 +44,17 @@ extends Command {
     }
   }
 }
+
+case class LookupUser(
+                       id: String,
+                       bearer_token: String,
+                       expansions: Option[String] = None,
+                       userFields: Option[String] = None,
+                       tweetFields: Option[String] = None)
+
+  extends Command {
+
+  def toLookupUserRequest: lookupuser.Request =
+    lookupuser.Request(id, bearer_token, expansions, userFields, tweetFields)
+
+}
