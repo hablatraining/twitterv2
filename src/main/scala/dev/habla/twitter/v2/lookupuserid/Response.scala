@@ -1,6 +1,6 @@
 package dev.habla.twitter
 package v2
-package lookupuser
+package lookupuserid
 
 sealed trait Response
 

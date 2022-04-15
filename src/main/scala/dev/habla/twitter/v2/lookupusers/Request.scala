@@ -1,9 +1,9 @@
 package dev.habla.twitter
 package v2
-package lookupuser
+package lookupusers
 
 case class Request(
-                    id: String,
+                    ids: String,
                     bearerToken: String,
                     expansions: Option[String] = None,
                     tweetFields: Option[String] = None,

@@ -1,10 +1,10 @@
 package dev.habla.twitter
 package v2_akka
-package lookupuser
+package lookupuserid
 
 import akka.http.scaladsl.model.headers.{Authorization, OAuth2BearerToken}
 import akka.http.scaladsl.model.{HttpRequest, Uri}
-import dev.habla.twitter.v2.lookupuser.Request
+import dev.habla.twitter.v2.lookupuserid.Request
 import dev.habla.twitter.v2_akka.QueryParams
 
 trait To extends QueryParams {

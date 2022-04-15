@@ -13,11 +13,15 @@ import scala.concurrent.Future
 
 object Main extends CommandApp[Command]{
 
+
+
+
    def run(command: Command, rargs: RemainingArgs): Unit =
       command match {
          case cmd: SearchRecent => runSearchRecent(cmd)
          case cmd: LookupTweet => runLookupTweet(cmd)
-         case cmd: LookupUser => runLookupUser(cmd)
+         case cmd: LookupUserId => runLookupUserId(cmd)
+         case cmd: LookupUsers => runLookupUsers(cmd)
       }
 
    def runLookupTweet(cmd: LookupTweet): Unit = withExecutionContext{
@@ -36,10 +40,16 @@ object Main extends CommandApp[Command]{
       }
    }(println, _.printStackTrace)
 
-   def runLookupUser(cmd: LookupUser): Unit = withExecutionContext {
+   def runLookupUserId(cmd: LookupUserId): Unit = withExecutionContext {
       implicit system =>
          implicit ec =>
-            v2_akka.lookupuser.Run(cmd.toLookupUserRequest)
+            v2_akka.lookupuserid.Run(cmd.toLookupUserIdRequest)
+   }(println, _.printStackTrace)
+
+   def runLookupUsers(cmd: LookupUsers): Unit = withExecutionContext {
+      implicit system =>
+         implicit ec =>
+            v2_akka.lookupusers.Run(cmd.toLookupUsersRequest)
    }(println, _.printStackTrace)
 
    def withExecutionContext[A](
