@@ -22,6 +22,8 @@ object Main extends CommandApp[Command]{
          case cmd: LookupTweet => runLookupTweet(cmd)
          case cmd: LookupUserId => runLookupUserId(cmd)
          case cmd: LookupUsers => runLookupUsers(cmd)
+         case cmd: LookupUserName => runLookupUserName(cmd)
+         case cmd: LookupUsersBy => runLookupUsersBy(cmd)
       }
 
    def runLookupTweet(cmd: LookupTweet): Unit = withExecutionContext{
@@ -50,6 +52,18 @@ object Main extends CommandApp[Command]{
       implicit system =>
          implicit ec =>
             v2_akka.lookupusers.Run(cmd.toLookupUsersRequest)
+   }(println, _.printStackTrace)
+
+   def runLookupUserName(cmd: LookupUserName): Unit = withExecutionContext {
+      implicit system =>
+         implicit ec =>
+            v2_akka.lookupusername.Run(cmd.toLookupUserNameRequest)
+   }(println, _.printStackTrace)
+
+   def runLookupUsersBy(cmd: LookupUsersBy): Unit = withExecutionContext {
+      implicit system =>
+         implicit ec =>
+            v2_akka.lookupusersby.Run(cmd.toLookupUsersByRequest)
    }(println, _.printStackTrace)
 
    def withExecutionContext[A](

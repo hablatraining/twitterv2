@@ -72,3 +72,31 @@ case class LookupUsers(
     lookupusers.Request(ids, bearer_token, expansions, userFields, tweetFields)
 
 }
+
+case class LookupUserName(
+                         username: String,
+                         bearer_token: String,
+                         expansions: Option[String] = None,
+                         userFields: Option[String] = None,
+                         tweetFields: Option[String] = None)
+
+  extends Command {
+
+  def toLookupUserNameRequest: lookupusername.Request =
+    lookupusername.Request(username, bearer_token, expansions, userFields, tweetFields)
+
+}
+
+case class LookupUsersBy(
+                        usernames: String,
+                        bearer_token: String,
+                        expansions: Option[String] = None,
+                        userFields: Option[String] = None,
+                        tweetFields: Option[String] = None)
+
+  extends Command {
+
+  def toLookupUsersByRequest: lookupusersby.Request =
+    lookupusersby.Request(usernames, bearer_token, expansions, userFields, tweetFields)
+
+}
