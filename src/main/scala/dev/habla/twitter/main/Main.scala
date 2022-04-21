@@ -2,14 +2,13 @@ package dev.habla.twitter
 package v2
 package main
 
-import scala.concurrent.ExecutionContext
-
+import scala.concurrent.{ExecutionContext, ExecutionContextExecutor, Future}
 import _root_.akka.actor.typed.ActorSystem
 import _root_.akka.actor.typed.scaladsl.Behaviors
 import caseapp._
+
 import scala.util.Success
 import scala.util.Failure
-import scala.concurrent.Future
 
 object Main extends CommandApp[Command]{
 
@@ -20,10 +19,9 @@ object Main extends CommandApp[Command]{
       command match {
          case cmd: SearchRecent => runSearchRecent(cmd)
          case cmd: LookupTweet => runLookupTweet(cmd)
-         case cmd: LookupUserId => runLookupUserId(cmd)
          case cmd: LookupUsers => runLookupUsers(cmd)
-         case cmd: LookupUserName => runLookupUserName(cmd)
          case cmd: LookupUsersBy => runLookupUsersBy(cmd)
+         case cmd: LookupUser => runLookupUser(cmd)
       }
 
    def runLookupTweet(cmd: LookupTweet): Unit = withExecutionContext{
@@ -42,11 +40,6 @@ object Main extends CommandApp[Command]{
       }
    }(println, _.printStackTrace)
 
-   def runLookupUserId(cmd: LookupUserId): Unit = withExecutionContext {
-      implicit system =>
-         implicit ec =>
-            v2_akka.lookupuserid.Run(cmd.toLookupUserIdRequest)
-   }(println, _.printStackTrace)
 
    def runLookupUsers(cmd: LookupUsers): Unit = withExecutionContext {
       implicit system =>
@@ -54,10 +47,11 @@ object Main extends CommandApp[Command]{
             v2_akka.lookupusers.Run(cmd.toLookupUsersRequest)
    }(println, _.printStackTrace)
 
-   def runLookupUserName(cmd: LookupUserName): Unit = withExecutionContext {
+
+   def runLookupUser(cmd: LookupUser): Unit = withExecutionContext {
       implicit system =>
          implicit ec =>
-            v2_akka.lookupusername.Run(cmd.toLookupUserNameRequest)
+            v2_akka.lookupuser.Run(cmd.toLookupUserRequest)
    }(println, _.printStackTrace)
 
    def runLookupUsersBy(cmd: LookupUsersBy): Unit = withExecutionContext {
@@ -72,7 +66,7 @@ object Main extends CommandApp[Command]{
       onFailure: Throwable => Unit
    ): Unit = {
       val system = ActorSystem(Behaviors.empty, "TwitterV2")
-      implicit val ec = system.executionContext
+      implicit val ec: ExecutionContextExecutor = system.executionContext
       run(system)(ec).onComplete{
          case Success(value) => onSuccess(value); system.terminate
          case Failure(exception) => onFailure(exception); system.terminate

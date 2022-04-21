@@ -1,10 +1,10 @@
 package dev.habla.twitter
 package v2_akka
-package lookupuserid
+package lookupuser
 
 import akka.http.scaladsl.model.{HttpResponse, StatusCodes}
 import akka.stream.Materializer
-import dev.habla.twitter.v2.lookupuserid._
+import dev.habla.twitter.v2.lookupuser._
 import dev.habla.twitter.v2_akka.{HttpBody, RateLimitHeaders}
 import spray.json.JsValue
 
