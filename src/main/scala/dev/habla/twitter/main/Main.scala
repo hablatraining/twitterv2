@@ -19,9 +19,8 @@ object Main extends CommandApp[Command]{
       command match {
          case cmd: SearchRecent => runSearchRecent(cmd)
          case cmd: LookupTweet => runLookupTweet(cmd)
-         case cmd: LookupUsers => runLookupUsers(cmd)
-         case cmd: LookupUsersBy => runLookupUsersBy(cmd)
          case cmd: LookupUser => runLookupUser(cmd)
+         case cmd: LookupUsers => runLookupUsers2(cmd)
       }
 
    def runLookupTweet(cmd: LookupTweet): Unit = withExecutionContext{
@@ -41,24 +40,19 @@ object Main extends CommandApp[Command]{
    }(println, _.printStackTrace)
 
 
-   def runLookupUsers(cmd: LookupUsers): Unit = withExecutionContext {
-      implicit system =>
-         implicit ec =>
-            v2_akka.lookupusers.Run(cmd.toLookupUsersRequest)
-   }(println, _.printStackTrace)
-
-
    def runLookupUser(cmd: LookupUser): Unit = withExecutionContext {
       implicit system =>
          implicit ec =>
             v2_akka.lookupuser.Run(cmd.toLookupUserRequest)
    }(println, _.printStackTrace)
 
-   def runLookupUsersBy(cmd: LookupUsersBy): Unit = withExecutionContext {
+
+   def runLookupUsers2(cmd: LookupUsers): Unit = withExecutionContext {
       implicit system =>
          implicit ec =>
-            v2_akka.lookupusersby.Run(cmd.toLookupUsersByRequest)
+            v2_akka.lookupusers.Run(cmd.toLookupUsersRequest)
    }(println, _.printStackTrace)
+
 
    def withExecutionContext[A](
       run: ActorSystem[_] => ExecutionContext => Future[A])(

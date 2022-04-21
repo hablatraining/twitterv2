@@ -1,6 +1,4 @@
-package dev.habla.twitter
-package v2_akka
-package lookupusers
+package dev.habla.twitter.v2_akka.lookupusers
 
 import dev.habla.twitter.v2
 import dev.habla.twitter.v2.lookupusers.Request

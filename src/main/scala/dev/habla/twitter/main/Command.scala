@@ -55,40 +55,30 @@ case class LookupUser(
 
   extends Command {
 
-  def toLookupUserRequest: lookupuser.Request = {
+  def toLookupUserRequest: lookupuser.Request =
     if (idOrName.exists(_.isLetter))
       lookupuser.Request(Right(idOrName), bearer_token, expansions, userFields, tweetFields)
     else
       lookupuser.Request(Left(idOrName), bearer_token, expansions, userFields, tweetFields)
 
-  }
-
 }
+
 
 case class LookupUsers(
-                       ids: String,
-                       bearer_token: String,
-                       expansions: Option[String] = None,
-                       userFields: Option[String] = None,
-                       tweetFields: Option[String] = None)
+                          idsOrNames: List[String],
+                          bearer_token: String,
+                          expansions: Option[String] = None,
+                          userFields: Option[String] = None,
+                          tweetFields: Option[String] = None)
 
   extends Command {
 
-  def toLookupUsersRequest: lookupusers.Request =
-    lookupusers.Request(ids, bearer_token, expansions, userFields, tweetFields)
+  def toLookupUsersRequest: lookupusers.Request = {
 
-}
+    if (idsOrNames.head.exists(_.isLetter))
+      lookupusers.Request(Right(idsOrNames), bearer_token, expansions, userFields, tweetFields)
+    else
+      lookupusers.Request(Left(idsOrNames), bearer_token, expansions, userFields, tweetFields)
 
-case class LookupUsersBy(
-                        usernames: String,
-                        bearer_token: String,
-                        expansions: Option[String] = None,
-                        userFields: Option[String] = None,
-                        tweetFields: Option[String] = None)
-
-  extends Command {
-
-  def toLookupUsersByRequest: lookupusersby.Request =
-    lookupusersby.Request(usernames, bearer_token, expansions, userFields, tweetFields)
-
+  }
 }

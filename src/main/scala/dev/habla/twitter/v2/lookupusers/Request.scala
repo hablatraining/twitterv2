@@ -3,7 +3,7 @@ package v2
 package lookupusers
 
 case class Request(
-                    ids: String,
+                    idsOrNames: Either[List[String],List[String]],
                     bearerToken: String,
                     expansions: Option[String] = None,
                     tweetFields: Option[String] = None,
