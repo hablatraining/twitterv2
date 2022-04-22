@@ -71,28 +71,6 @@ case class LookupUser(
 
 }
 
-/**
-case class LookupUser(
-                       idOrName: String,
-                       bearer_token: String,
-                       expansions: Option[String] = None,
-                       userFields: Option[String] = None,
-                       tweetFields: Option[String] = None)
-
-  extends Command {
-
-  def toLookupUserRequest: lookupuser.Request =
-
-    if (idOrName.exists(_.isLetter))
-      lookupuser.Request(Right(idOrName), bearer_token, expansions, userFields, tweetFields)
-    else
-      lookupuser.Request(Left(idOrName), bearer_token, expansions, userFields, tweetFields)
-
-
-
-}*/
-
-
 case class LookupUsers(
                           ids: Option[List[String]] = None,
                           usernames: Option[List[String]] = None,
