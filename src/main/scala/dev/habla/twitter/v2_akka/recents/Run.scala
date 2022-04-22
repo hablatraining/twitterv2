@@ -2,10 +2,6 @@ package dev.habla.twitter
 package v2_akka
 package recents
 
-import scala.concurrent.ExecutionContext
-import scala.concurrent.Future
-import akka.actor.typed.ActorSystem
-import akka.http.scaladsl.Http
 import v2._, v2.recents._
 
 object Run extends PaginationEndpoint[SingleRequest] 

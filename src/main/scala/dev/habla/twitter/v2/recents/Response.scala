@@ -2,8 +2,6 @@ package dev.habla.twitter
 package v2
 package recents
 
-import scala.concurrent.duration._
-
 import spray.json.JsValue
 
 sealed trait Response
@@ -37,10 +35,9 @@ case class ErroneousTextSingleResponse(data: String) extends ErroneousSingleResp
 }
 
 trait JsonSupport{
-    import _root_.akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
     import spray.json._
     import DefaultJsonProtocol._
     
-    implicit val includesFormat = jsonFormat1(Tweets.Includes)
-    implicit val searchSingleResponseFormat = jsonFormat3(Tweets.Body)
+    implicit val includesFormat: RootJsonFormat[Tweets.Includes] = jsonFormat1(Tweets.Includes)
+    implicit val searchSingleResponseFormat: RootJsonFormat[Tweets.Body] = jsonFormat3(Tweets.Body)
 }

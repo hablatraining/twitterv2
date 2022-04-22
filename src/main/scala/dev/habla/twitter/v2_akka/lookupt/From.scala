@@ -2,17 +2,13 @@ package dev.habla.twitter
 package v2_akka
 package lookupt
 
-import scala.jdk.OptionConverters._
 import scala.util.Try
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext
-import akka.http.scaladsl.unmarshalling.Unmarshal
 import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.model.HttpResponse
-import akka.http.scaladsl.model.headers.ModeledCustomHeader
-import akka.http.scaladsl.model.headers.ModeledCustomHeaderCompanion
 import akka.stream.Materializer
-import spray.json._, DefaultJsonProtocol._
+import spray.json._
 import v2.lookupt._
 
 trait From extends HttpBody with RateLimitHeaders{

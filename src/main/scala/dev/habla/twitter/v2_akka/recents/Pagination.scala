@@ -3,40 +3,20 @@ package v2_akka
 package recents
 
 import java.nio.file.Paths
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.temporal.ChronoUnit
-import java.time.temporal.TemporalUnit
 
-import scala.concurrent.Await
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 import scala.concurrent.duration._
 import scala.language.postfixOps
-import scala.util.Failure
-import scala.util.Success
 
 import akka.NotUsed
 import akka.actor.typed.ActorSystem
-import akka.actor.typed.scaladsl.Behaviors
-import akka.event.Logging
-import akka.http.scaladsl.Http
-import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
-import akka.http.scaladsl.model._
-import akka.http.scaladsl.model.headers.Authorization
-import akka.http.scaladsl.model.headers.BasicHttpCredentials
-import akka.http.scaladsl.model.headers.OAuth2BearerToken
-import akka.http.scaladsl.unmarshalling.Unmarshal
-import akka.stream.Attributes
 import akka.stream.scaladsl.FileIO
 import akka.stream.scaladsl.Flow
 import akka.stream.scaladsl.Keep
 import akka.stream.scaladsl.Sink
 import akka.stream.scaladsl.Source
 import akka.util.ByteString
-import spray.json.DefaultJsonProtocol._
-import spray.json._
-import akka.stream.scaladsl.FlowOpsMat
 
 import v2.Meta, v2.recents._
 

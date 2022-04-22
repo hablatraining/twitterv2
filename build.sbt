@@ -21,8 +21,8 @@ libraryDependencies ++= Seq(
 
   testFrameworks += new TestFramework("utest.runner.Framework")
 
-mainClass in (Compile, run) := Some("dev.habla.twitter.v2.Main")
-mainClass in assembly := Some("dev.habla.twitter.v2.Main")
+mainClass in (Compile, run) := Some("dev.habla.twitter.v2.main.Main")
+mainClass in assembly := Some("dev.habla.twitter.v2.main.Main")
 assemblyJarName in assembly := "twitterv2-" + version.value + ".jar"
 
 
