@@ -10,7 +10,7 @@ import dev.habla.twitter.v2_akka.QueryParams
 trait To extends QueryParams {
 
   def to(request: Request): HttpRequest = {
-    val uriBegin = request.idOrName.fold(l => s"https://api.twitter.com/2/users/${l}", r => s"https://api.twitter.com/2/users/by/username/${r}")
+    val uriBegin = request.idOrName.fold(id => s"https://api.twitter.com/2/users/${id}", username => s"https://api.twitter.com/2/users/by/username/${username}")
     HttpRequest(
       uri = Uri(uriBegin)
         .withQuery(Uri.Query.apply(
