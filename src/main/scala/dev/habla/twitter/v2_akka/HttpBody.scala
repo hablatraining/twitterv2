@@ -6,7 +6,7 @@ import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 import akka.http.scaladsl.unmarshalling.Unmarshal
 import scala.util.Try
-import spray.json._, DefaultJsonProtocol._
+import spray.json._
 
 trait HttpBody{
 

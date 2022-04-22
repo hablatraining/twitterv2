@@ -26,10 +26,9 @@ case class ErroneousTextResponse(data: String) extends ErroneousResponse{
 }
 
 trait JsonSupport{
-    import _root_.akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
     import spray.json._
     import DefaultJsonProtocol._
     
-    implicit val includesFormat = jsonFormat1(TweetInfo.Includes)
-    implicit val bodyFormat = jsonFormat2(TweetInfo.Body)
+    implicit val includesFormat: RootJsonFormat[TweetInfo.Includes] = jsonFormat1(TweetInfo.Includes)
+    implicit val bodyFormat: RootJsonFormat[TweetInfo.Body] = jsonFormat2(TweetInfo.Body)
 }

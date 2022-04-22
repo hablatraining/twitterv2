@@ -5,13 +5,15 @@ package lookupusers
 import akka.http.scaladsl.model.headers.{Authorization, OAuth2BearerToken}
 import akka.http.scaladsl.model.{HttpRequest, Uri}
 import dev.habla.twitter.v2.lookupusers.Request
-import dev.habla.twitter.v2_akka.QueryParams
 
 
 trait To extends QueryParams {
 
   def to(request: Request): HttpRequest = {
-    val requestData = request.idsOrNames.fold(listIds => ("https://api.twitter.com/2/users", "ids", listIds), listUsernames => ("https://api.twitter.com/2/users/by", "usernames", listUsernames))
+    val requestData = request.idsOrNames.fold(
+      listIds => ("https://api.twitter.com/2/users", "ids", listIds),
+      listUsernames => ("https://api.twitter.com/2/users/by", "usernames", listUsernames)
+    )
     HttpRequest(
       uri = Uri(requestData._1)
         .withQuery(Uri.Query.apply(

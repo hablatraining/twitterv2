@@ -27,10 +27,9 @@ case class Tweet(
     withheld: Option[JsValue])
 
 object Tweet{
-    import _root_.akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
     import spray.json._
     import DefaultJsonProtocol._
     
-    implicit val tweetFormat = jsonFormat20(Tweet.apply)
+    implicit val tweetFormat: RootJsonFormat[Tweet] = jsonFormat20(Tweet.apply)
 
 }

@@ -45,7 +45,6 @@ extends Command {
   }
 }
 
-
 case class LookupUser(
                        id: Option[String] = None,
                        username: Option[String] = None,
@@ -57,32 +56,27 @@ case class LookupUser(
   extends Command {
 
   def toLookupUserRequest: Either[String,lookupuser.Request] =
-
     if (id.isDefined && username.isDefined)
-      Left("Solo se puede definir o id o username")
+      Left("Solo se puede definir o id o username, no ambos")
     else if (id.isEmpty && username.isEmpty)
       Left("Se tiene que especificar o id o username")
     else if (id.isDefined)
       Right(lookupuser.Request(Left(id.get), bearer_token, expansions, userFields, tweetFields))
     else
       Right(lookupuser.Request(Right(username.get), bearer_token, expansions, userFields, tweetFields))
-
-
-
 }
 
 case class LookupUsers(
-                          ids: Option[List[String]] = None,
-                          usernames: Option[List[String]] = None,
-                          bearer_token: String,
-                          expansions: Option[String] = None,
-                          userFields: Option[String] = None,
-                          tweetFields: Option[String] = None)
+                        ids: Option[List[String]] = None,
+                        usernames: Option[List[String]] = None,
+                        bearer_token: String,
+                        expansions: Option[String] = None,
+                        userFields: Option[String] = None,
+                        tweetFields: Option[String] = None)
 
   extends Command {
 
   def toLookupUsersRequest: Either[String,lookupusers.Request] = {
-
     if (ids.isDefined && usernames.isDefined)
       Left("Solo se puede definir o ids o usernames")
     else if (ids.isEmpty && usernames.isEmpty)
@@ -91,6 +85,5 @@ case class LookupUsers(
       Right(lookupusers.Request(Left(ids.get), bearer_token, expansions, userFields, tweetFields))
     else
       Right(lookupusers.Request(Right(usernames.get), bearer_token, expansions, userFields, tweetFields))
-
   }
 }

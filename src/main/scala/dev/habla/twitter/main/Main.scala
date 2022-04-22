@@ -39,20 +39,17 @@ object Main extends CommandApp[Command]{
       }
    }(println, _.printStackTrace)
 
-
    def runLookupUser(cmd: LookupUser): Unit = withExecutionContext {
       implicit system =>
          implicit ec =>
            cmd.toLookupUserRequest.fold(error => Future.failed(new Exception(error)), r => v2_akka.lookupuser.Run(r))
    }(println, _.printStackTrace)
 
-
    def runLookupUsers(cmd: LookupUsers): Unit = withExecutionContext {
       implicit system =>
          implicit ec =>
             cmd.toLookupUsersRequest.fold(error => Future.failed(new Exception(error)), r => v2_akka.lookupusers.Run(r))
    }(println, _.printStackTrace)
-
 
    def withExecutionContext[A](
       run: ActorSystem[_] => ExecutionContext => Future[A])(
