@@ -47,6 +47,32 @@ extends Command {
 
 
 case class LookupUser(
+                       id: Option[String] = None,
+                       username: Option[String] = None,
+                       bearer_token: String,
+                       expansions: Option[String] = None,
+                       userFields: Option[String] = None,
+                       tweetFields: Option[String] = None)
+
+  extends Command {
+
+  def toLookupUserRequest: Either[String,lookupuser.Request] =
+
+    if (id.isDefined && username.isDefined)
+      Left("Solo se puede definir o id o username")
+    else if (id.isEmpty && username.isEmpty)
+      Left("Se tiene que especificar o id o username")
+    else if (id.isDefined)
+      Right(lookupuser.Request(Left(id.get), bearer_token, expansions, userFields, tweetFields))
+    else
+      Right(lookupuser.Request(Right(username.get), bearer_token, expansions, userFields, tweetFields))
+
+
+
+}
+
+/**
+case class LookupUser(
                        idOrName: String,
                        bearer_token: String,
                        expansions: Option[String] = None,
@@ -56,16 +82,20 @@ case class LookupUser(
   extends Command {
 
   def toLookupUserRequest: lookupuser.Request =
+
     if (idOrName.exists(_.isLetter))
       lookupuser.Request(Right(idOrName), bearer_token, expansions, userFields, tweetFields)
     else
       lookupuser.Request(Left(idOrName), bearer_token, expansions, userFields, tweetFields)
 
-}
+
+
+}*/
 
 
 case class LookupUsers(
-                          idsOrNames: List[String],
+                          ids: Option[List[String]] = None,
+                          usernames: Option[List[String]] = None,
                           bearer_token: String,
                           expansions: Option[String] = None,
                           userFields: Option[String] = None,
@@ -73,12 +103,16 @@ case class LookupUsers(
 
   extends Command {
 
-  def toLookupUsersRequest: lookupusers.Request = {
+  def toLookupUsersRequest: Either[String,lookupusers.Request] = {
 
-    if (idsOrNames.head.exists(_.isLetter))
-      lookupusers.Request(Right(idsOrNames), bearer_token, expansions, userFields, tweetFields)
+    if (ids.isDefined && usernames.isDefined)
+      Left("Solo se puede definir o ids o usernames")
+    else if (ids.isEmpty && usernames.isEmpty)
+      Left("Se tiene que especificar o id o username")
+    else if (ids.isDefined)
+      Right(lookupusers.Request(Left(ids.get), bearer_token, expansions, userFields, tweetFields))
     else
-      lookupusers.Request(Left(idsOrNames), bearer_token, expansions, userFields, tweetFields)
+      Right(lookupusers.Request(Right(usernames.get), bearer_token, expansions, userFields, tweetFields))
 
   }
 }

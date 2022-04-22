@@ -20,7 +20,7 @@ object Main extends CommandApp[Command]{
          case cmd: SearchRecent => runSearchRecent(cmd)
          case cmd: LookupTweet => runLookupTweet(cmd)
          case cmd: LookupUser => runLookupUser(cmd)
-         case cmd: LookupUsers => runLookupUsers2(cmd)
+         case cmd: LookupUsers => runLookupUsers(cmd)
       }
 
    def runLookupTweet(cmd: LookupTweet): Unit = withExecutionContext{
@@ -43,14 +43,14 @@ object Main extends CommandApp[Command]{
    def runLookupUser(cmd: LookupUser): Unit = withExecutionContext {
       implicit system =>
          implicit ec =>
-            v2_akka.lookupuser.Run(cmd.toLookupUserRequest)
+           cmd.toLookupUserRequest.fold(error => Future.failed(new Exception(error)), r => v2_akka.lookupuser.Run(r))
    }(println, _.printStackTrace)
 
 
-   def runLookupUsers2(cmd: LookupUsers): Unit = withExecutionContext {
+   def runLookupUsers(cmd: LookupUsers): Unit = withExecutionContext {
       implicit system =>
          implicit ec =>
-            v2_akka.lookupusers.Run(cmd.toLookupUsersRequest)
+            cmd.toLookupUsersRequest.fold(error => Future.failed(new Exception(error)), r => v2_akka.lookupusers.Run(r))
    }(println, _.printStackTrace)
 
 
