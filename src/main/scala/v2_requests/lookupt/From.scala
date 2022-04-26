@@ -2,6 +2,7 @@ package v2_requests.lookupt
 
 import v2_requests._
 import v2.lookupt._
+import ujson._
 import spray.json._
 
 import scala.util.Try
@@ -10,15 +11,14 @@ import scala.util.Try
 trait From extends HttpBody with RateLimitHeaders{
 
     def from(response: requests.Response): Response = {
-        val bodyE = parseBody(response)
-        parseTweetInfo(response, bodyE)
+        parseTweetInfo(response, parseBody(response))
           .orElse(parseRateLimitExceeded(response))
-          .orElse(parseErroneousTextResponse(bodyE))
-          .orElse(parseErroneousJsonResponse(bodyE))
+          .orElse(parseErroneousTextResponse(parseBody(response)))
+          .orElse(parseErroneousJsonResponse(parseBody(response)))
           .getOrElse(ErroneousTextResponse("Not a lookup response"))
         }
 
-    def parseTweetInfo(response: requests.Response, bodyE: Either[String,JsValue]): Option[TweetInfo] =
+    def parseTweetInfo(response: requests.Response, bodyE: Either[String, JsValue]): Option[TweetInfo] =
         for {
             body <- bodyE.toOption if response.statusCode == 200
             tweets <- Try(body.convertTo[TweetInfo.Body]).toOption

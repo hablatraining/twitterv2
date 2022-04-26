@@ -18,7 +18,7 @@ case class Tweet(
     lang: Option[JsValue], 
     non_public_metrics: Option[JsValue], 
     organic_metrics: Option[JsValue], 
-    possiby_sensitive: Option[JsValue], 
+    possibly_sensitive: Option[JsValue],
     promoted_metrics: Option[JsValue], 
     public_metrics: Option[JsValue], 
     referenced_tweets: Option[JsValue], 
@@ -31,6 +31,6 @@ object Tweet{
     import spray.json._
     import DefaultJsonProtocol._
     
-    implicit val tweetFormat = jsonFormat20(Tweet.apply)
+    implicit val tweetFormat: RootJsonFormat[Tweet] = jsonFormat20(Tweet.apply)
 
 }
