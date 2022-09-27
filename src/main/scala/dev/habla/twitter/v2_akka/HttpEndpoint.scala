@@ -40,5 +40,8 @@ trait HttpEndpointSyntax{
 trait HttpEndpointInstances{
     implicit val lookuptEndpoint: HttpEndpoint.Aux[v2.lookupt.Request, v2.lookupt.Response] = 
         v2_akka.lookupt.Run
+
+    implicit val lookupuserEndpoint: HttpEndpoint.Aux[v2.lookupuser.Request, v2.lookupuser.Response] =
+        v2_akka.lookupuser.Run
 }
 
