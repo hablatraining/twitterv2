@@ -12,6 +12,7 @@ object MainLi extends CommandApp[Command] {
     command match {
       case cmd: LookupTweet => runLookupTweet(cmd)
       case cmd: LookupUser => runLookupUser(cmd)
+      case _ => ()
     }
 
   def runLookupTweet(cmd: LookupTweet): Unit =
@@ -20,7 +21,7 @@ object MainLi extends CommandApp[Command] {
 
   def runLookupUser(cmd: LookupUser): Unit = {
     cmd.toLookupUserRequest.left.map(new Exception(_)).toTry
-      .flatMap(req => Try(v2_requests.lookupuser.Run(req))
-        .map(identity)).fold(msg => println(msg.getMessage), println)
+      .flatMap(req => Try(v2_requests.lookupuser.Run(req)))
+      .fold(msg => println(msg.getMessage), println)
   }
 }
