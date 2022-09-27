@@ -22,11 +22,14 @@ lib_managed/
 src_managed/
 project/boot/
 project/plugins/project/
+null/
 
+desktop.ini
 
 # Scala-IDE specific
 .scala_dependencies
 .worksheet
+*.sc
 
 ##
 ## ECLIPSE-Specific.
@@ -125,8 +128,7 @@ node_modules
 *.py[co]
 __pycache__
 *.egg-info
-*~
-*.bak
+
 .ipynb_checkpoints
 .tox
 .DS_Store
@@ -135,9 +137,7 @@ __pycache__
 .coverage
 .pytest_cache
 
-*.swp
 *.map
-.idea/
 Read the Docs
 config.rst
 
